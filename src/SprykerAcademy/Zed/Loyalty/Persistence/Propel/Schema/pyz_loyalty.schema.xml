@@ -75,7 +75,7 @@
     <table name="pyz_loyalty_earning_rule" idMethod="native">
         <column name="id_loyalty_earning_rule" type="INTEGER" primaryKey="true" autoIncrement="true"/>
         <column name="earning_rule_name" type="VARCHAR" required="true"/>
-        <column name="condition" type="VARCHAR" required="true"/>
+        <column name="earning_condition" type="VARCHAR" required="true"/>
         <column name="points" type="INTEGER" required="true"/>
         <column name="is_active" type="BOOLEAN" defaultValue="true"/>
     </table>
