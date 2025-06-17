@@ -1,4 +1,88 @@
 <?xml version="1.0"?>
-<transfers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="spryker:transfer-01 http://static.spryker.com/transfer-01.xsd">
+<transfers xmlns="spryker:transfer-01"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="spryker:transfer-01 http://static.spryker.com/transfer-01.xsd">
+
+    <transfer name="LoyaltyPoint">
+        <property name="idLoyaltyPoint" type="int"/>
+        <property name="uuid" type="string" nullable="true" comment="A unique identifier for external systems or idempotency."/>
+        <property name="fkCustomer" type="int" required="true"/>
+        <property name="customerReference" type="string" nullable="true"/>
+        <property name="points" type="int" required="true"/>
+        <property name="pointsBalance" type="int" nullable="true" comment="Remaining balance for this specific point entry, if partial redemption is allowed."/>
+        <property name="type" type="string" comment="e.g., 'EARNED', 'REDEEMED', 'EXPIRED', 'ADJUSTMENT_ADD', 'ADJUSTMENT_SUBTRACT'"/>
+        <property name="source" type="string" comment="e.g., 'ORDER_PLACEMENT', 'MANUAL_ADJUSTMENT', 'REFERRAL', 'BIRTHDAY_BONUS', 'REDEMPTION'"/>
+        <property name="fkSalesOrder" type="int" nullable="true"/>
+        <property name="salesOrderReference" type="string" nullable="true"/>
+        <property name="fkSalesOrderItem" type="int" nullable="true"/>
+        <property name="description" type="string" nullable="true"/>
+        <property name="earnedAt" type="string" required="true" comment="Timestamp of when the points were earned/granted."/>
+        <property name="expiresAt" type="string" nullable="true" comment="Timestamp of when these specific points expire."/>
+        <property name="redeemedAt" type="string" nullable="true" comment="Timestamp of when points were redeemed."/>
+        <property name="fkLoyaltyRule" type="int" nullable="true" comment="Reference to the rule that triggered this point event."/>
+        <property name="metadata" type="array" nullable="true" comment="For any additional unstructured data."/>
+    </transfer>
+
+    <transfer name="LoyaltyRule">
+        <property name="idLoyaltyRule" type="int"/>
+        <property name="uuid" type="string" nullable="true"/>
+        <property name="name" type="string" required="true"/>
+        <property name="description" type="string" nullable="true"/>
+        <property name="type" type="string" required="true" comment="e.g., 'EARN_PER_CURRENCY_UNIT', 'EARN_FIXED_PER_ORDER', 'REDEEM_FOR_DISCOUNT_PERCENTAGE', 'REDEEM_FOR_DISCOUNT_FIXED_AMOUNT'"/>
+        <property name="value" type="float" required="true" comment="The value of the rule, e.g., points per currency unit, or discount percentage."/>
+        <property name="currencyIsoCode" type="string" nullable="true" comment="Applicable if rule is currency specific."/>
+        <property name="conditions" type="array" nullable="true" comment="Structured conditions for rule applicability, e.g., specific products, customer segments."/>
+        <property name="isActive" type="bool" default="false"/>
+        <property name="validFrom" type="string" nullable="true"/>
+        <property name="validTo" type="string" nullable="true"/>
+        <property name="priority" type="int" default="0" comment="For rule conflict resolution."/>
+    </transfer>
+
+    <transfer name="CustomerLoyalty">
+        <property name="fkCustomer" type="int" required="true"/>
+        <property name="customerReference" type="string"/>
+        <property name="totalPointsEarned" type="int" default="0"/>
+        <property name="totalPointsRedeemed" type="int" default="0"/>
+        <property name="currentBalance" type="int" default="0"/>
+        <property name="loyaltyTierName" type="string" nullable="true"/>
+        <property name="history" type="LoyaltyPoint[]" singular="loyaltyPointHistoryEntry"/>
+    </transfer>
+
+    <transfer name="Customer">
+        <property name="loyalty" type="CustomerLoyalty" nullable="true"/>
+    </transfer>
+
+    <transfer name="Quote">
+        <property name="loyaltyPointsToRedeem" type="int" nullable="true"/>
+        <property name="loyaltyRedemptionAmount" type="int" nullable="true" comment="The monetary value of the redeemed points as a discount."/>
+        <property name="appliedLoyaltyRuleIds" type="int[]" singular="appliedLoyaltyRuleId" nullable="true"/>
+        <property name="availableLoyaltyPoints" type="int" nullable="true" comment="Points available for the current customer to redeem on this quote."/>
+        <property name="isLoyaltyApplied" type="bool" default="false"/>
+    </transfer>
+
+    <transfer name="Order">
+        <property name="loyaltyPointsEarned" type="int" nullable="true"/>
+        <property name="loyaltyPointsRedeemed" type="int" nullable="true"/>
+        <property name="loyaltyRedemptionAmount" type="int" nullable="true"/>
+    </transfer>
+
+    <transfer name="SaveOrderResponse">
+        <property name="loyaltyPointsEarned" type="int" nullable="true"/>
+    </transfer>
+
+    <transfer name="LoyaltyEligibilityRequest">
+        <property name="quote" type="Quote" required="true"/>
+        <property name="customer" type="Customer" nullable="true"/>
+    </transfer>
+
+    <transfer name="LoyaltyEligibilityResponse">
+        <property name="isEligibleForEarning" type="bool" default="false"/>
+        <property name="pointsToEarn" type="int" default="0"/>
+        <property name="applicableEarningRule" type="LoyaltyRule" nullable="true"/>
+        <property name="isEligibleForRedemption" type="bool" default="false"/>
+        <property name="maxPointsToRedeem" type="int" default="0"/>
+        <property name="redemptionValuePerPoint" type="float" default="0"/>
+        <property name="applicableRedemptionRules" type="LoyaltyRule[]" singular="applicableRedemptionRule"/>
+    </transfer>
 
 </transfers>
