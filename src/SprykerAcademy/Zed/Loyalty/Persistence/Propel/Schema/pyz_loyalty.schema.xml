@@ -72,5 +72,19 @@
 
         <id-method-parameter value="pyz_loyalty_customer_tier_pk_seq"/>
     </table>
+    <table name="pyz_loyalty_earning_rule" idMethod="native">
+        <column name="id_loyalty_earning_rule" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="VARCHAR" required="true"/>
+        <column name="condition" type="VARCHAR" required="true"/>
+        <column name="points" type="INTEGER" required="true"/>
+        <column name="is_active" type="BOOLEAN" defaultValue="true"/>
+    </table>
+    <table name="pyz_loyalty_redeem_rule" idMethod="native">
+        <column name="id_loyalty_redeem_rule" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="VARCHAR" required="true"/>
+        <column name="description" type="LONGVARCHAR"/>
+        <column name="points_required" type="INTEGER" required="true"/>
+        <column name="is_active" type="BOOLEAN" defaultValue="true"/>
+    </table>
 
 </database>
