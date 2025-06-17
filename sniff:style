@@ -1,0 +1,13 @@
+
+Fatal error: Uncaught Error: Class "Pyz\Shared\Loyalty\LoyaltyConstants" not found in /data/config/Shared/config_default.php:932
+Stack trace:
+#0 /data/vendor/spryker/config/src/Spryker/Shared/Config/Config.php(213): include()
+#1 /data/vendor/spryker/config/src/Spryker/Shared/Config/Config.php(145): Spryker\Shared\Config\Config::buildConfig('default', Object(ArrayObject))
+#2 /data/vendor/spryker/config/src/Spryker/Shared/Config/Config.php(63): Spryker\Shared\Config\Config::init()
+#3 /data/vendor/spryker/error-handler/src/Spryker/Shared/ErrorHandler/ErrorHandlerEnvironment.php(24): Spryker\Shared\Config\Config::get('ERROR_LEVEL')
+#4 /data/vendor/spryker/console/src/Spryker/Zed/Console/Business/Model/Environment.php(34): Spryker\Shared\ErrorHandler\ErrorHandlerEnvironment->__construct()
+#5 /data/vendor/spryker/console/src/Spryker/Zed/Console/Communication/ConsoleBootstrapElector.php(24): Spryker\Zed\Console\Business\Model\Environment::initialize()
+#6 /data/vendor/spryker/console/bin/console(23): Spryker\Zed\Console\Communication\ConsoleBootstrapElector->__construct()
+#7 /data/vendor/bin/console(119): include('/data/vendor/sp...')
+#8 {main}
+  thrown in /data/config/Shared/config_default.php on line 932

@@ -133,6 +133,7 @@ use Spryker\Zed\OauthAuth0\OauthAuth0Config;
 use Spryker\Zed\Oms\OmsConfig;
 use Spryker\Zed\Payment\PaymentConfig;
 use Spryker\Zed\Propel\PropelConfig;
+use SprykerAcademy\Shared\Loyalty\LoyaltyConstants;
 use SprykerShop\Shared\CustomerPage\CustomerPageConstants;
 use SprykerShop\Shared\ShopUi\ShopUiConstants;
 use SprykerShop\Shared\StorageRouter\StorageRouterConstants;
@@ -164,7 +165,7 @@ $config[KernelConstants::CORE_NAMESPACES] = [
     'SprykerEco',
     'Spryker',
     'SprykerSdk',
-    'SprykerAcademy'
+    'SprykerAcademy',
 ];
 
 // >>> ROUTER
@@ -922,3 +923,15 @@ $config[OauthClientConstants::OAUTH_OPTION_AUDIENCE_FOR_ACP]
 $config[OauthClientConstants::OAUTH_OPTION_AUDIENCE_FOR_MESSAGE_BROKER] = 'aop-event-platform';
 
 $config[AppCatalogGuiConstants::OAUTH_OPTION_AUDIENCE] = 'aop-atrs';
+// loyalty
+
+
+// ... other configurations ...
+
+$config[LoyaltyConstants::DEFAULT_LOYALTY_POINT_EXPIRY_DAYS] = 365; // Points expire after 1 year
+$config[LoyaltyConstants::LOYALTY_EARN_CALCULATION_TYPE] = 'NET_PRICE';
+$config[LoyaltyConstants::IS_PARTIAL_REDEMPTION_OF_ENTRY_ALLOWED] = false;
+$config[LoyaltyConstants::SOURCE_ORDER_PLACEMENT] = 'ORDER_PLACEMENT';
+$config[LoyaltyConstants::SOURCE_REDEMPTION] = 'REDEMPTION';
+$config[LoyaltyConstants::MINIMUM_ORDER_VALUE_TO_EARN_POINTS] = 0; // No minimum order value by default
+$config[LoyaltyConstants::REDEMPTION_VALUE_PER_POINT] = 0.01; // 1 point = €0.01 for redemption

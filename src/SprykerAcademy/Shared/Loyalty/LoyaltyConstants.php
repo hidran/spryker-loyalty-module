@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace Pyz\Shared\Loyalty;
+namespace SprykerAcademy\Shared\Loyalty;
 
 /**
  * Defines constants for the Loyalty module.
