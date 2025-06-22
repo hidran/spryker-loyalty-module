@@ -9,6 +9,13 @@ declare(strict_types = 1);
 
 namespace SprykerAcademy\Zed\Loyalty\Business;
 
+use Generated\Shared\Transfer\CustomerLoyaltyTransfer;
+use Generated\Shared\Transfer\CustomerTransfer;
+use Generated\Shared\Transfer\OrderTransfer;
+
 interface LoyaltyFacadeInterface
 {
+    public function awardPointsForOrder(OrderTransfer $orderTransfer): void;
+
+    public function getCustomerLoyalty(CustomerTransfer $customerTransfer): CustomerLoyaltyTransfer;
 }
