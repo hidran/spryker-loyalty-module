@@ -1,14 +1,11 @@
 <?php
 
-/**
- * This file is part of the Spryker Commerce OS.
- * For full license information, please view the LICENSE file that was distributed with this source code.
- */
-
-declare(strict_types = 1);
-
 namespace SprykerAcademy\Zed\Loyalty\Persistence;
 
+use Generated\Shared\Transfer\CustomerLoyaltyTransfer;
+use Generated\Shared\Transfer\LoyaltyPointTransfer;
+use Generated\Shared\Transfer\LoyaltyRuleTransfer;
+use Orm\Zed\Loyalty\Persistence\Map\SpyAcademyLoyaltyPointTableMap;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
 
 /**
@@ -16,4 +13,50 @@ use Spryker\Zed\Kernel\Persistence\AbstractRepository;
  */
 class LoyaltyRepository extends AbstractRepository implements LoyaltyRepositoryInterface
 {
+    public function findCustomerLoyaltyByIdCustomer(int $idCustomer): ?CustomerLoyaltyTransfer
+    {
+        $loyaltyPointEntities = $this->getFactory()
+            ->createLoyaltyPointQuery()
+            ->filterByFkCustomer($idCustomer)
+            ->find();
+
+        if ($loyaltyPointEntities->count() === 0) {
+            return null;
+        }
+
+        $customerData = $this->getFactory()
+            ->createLoyaltyPointQuery()
+            ->joinWithCustomer()
+            ->where(SpyAcademyLoyaltyPointTableMap::COL_FK_CUSTOMER . ' = ?', $idCustomer)
+            ->select(['spy_customer.customer_reference'])
+            ->findOne();
+
+        $customerLoyaltyTransfer = (new CustomerLoyaltyTransfer())
+            ->setFkCustomer($idCustomer)
+            ->setCustomerReference($customerData['spy_customer.customer_reference']);
+
+        $currentBalance = 0;
+        foreach ($loyaltyPointEntities as $loyaltyPointEntity) {
+            $loyaltyPointTransfer = (new LoyaltyPointTransfer())->fromArray($loyaltyPointEntity->toArray(), true);
+            $customerLoyaltyTransfer->addLoyaltyPointHistoryEntry($loyaltyPointTransfer);
+            $currentBalance += $loyaltyPointEntity->getPoints();
+        }
+
+        return $customerLoyaltyTransfer->setCurrentBalance($currentBalance);
+    }
+
+    public function findActiveLoyaltyRuleByType(string $ruleType): ?LoyaltyRuleTransfer
+    {
+        $loyaltyRuleEntity = $this->getFactory()
+            ->createLoyaltyRuleQuery()
+            ->filterByType($ruleType)
+            ->filterByIsActive(true)
+            ->findOne();
+
+        if (!$loyaltyRuleEntity) {
+            return null;
+        }
+
+        return (new LoyaltyRuleTransfer())->fromArray($loyaltyRuleEntity->toArray(), true);
+    }
 }

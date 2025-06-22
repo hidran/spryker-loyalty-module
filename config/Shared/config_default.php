@@ -935,3 +935,4 @@ $config[LoyaltyConstants::SOURCE_ORDER_PLACEMENT] = 'ORDER_PLACEMENT';
 $config[LoyaltyConstants::SOURCE_REDEMPTION] = 'REDEMPTION';
 $config[LoyaltyConstants::MINIMUM_ORDER_VALUE_TO_EARN_POINTS] = 0; // No minimum order value by default
 $config[LoyaltyConstants::REDEMPTION_VALUE_PER_POINT] = 0.01; // 1 point = €0.01 for redemption
+$config[LoyaltyConstants::SOURCE_ORDER_PLACEMENT] = 'order_placement';

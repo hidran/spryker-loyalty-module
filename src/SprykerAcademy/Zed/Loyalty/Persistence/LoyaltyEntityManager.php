@@ -1,14 +1,9 @@
 <?php
 
-/**
- * This file is part of the Spryker Commerce OS.
- * For full license information, please view the LICENSE file that was distributed with this source code.
- */
-
-declare(strict_types = 1);
-
 namespace SprykerAcademy\Zed\Loyalty\Persistence;
 
+use Generated\Shared\Transfer\LoyaltyPointTransfer;
+use Generated\Shared\Transfer\LoyaltyRuleTransfer;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
 
 /**
@@ -16,4 +11,40 @@ use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
  */
 class LoyaltyEntityManager extends AbstractEntityManager implements LoyaltyEntityManagerInterface
 {
+    public function saveLoyaltyPoint(LoyaltyPointTransfer $loyaltyPointTransfer): LoyaltyPointTransfer
+    {
+        $loyaltyPointEntity = $this->getFactory()
+            ->createLoyaltyPointQuery()
+            ->filterByIdLoyaltyPoint($loyaltyPointTransfer->getIdLoyaltyPoint())
+            ->findOneOrCreate();
+
+        $loyaltyPointEntity->fromArray(
+            $loyaltyPointTransfer->modifiedToArray(false)
+        );
+
+        $loyaltyPointEntity->setFkCustomer($loyaltyPointTransfer->getFkCustomer());
+        $loyaltyPointEntity->setFkSalesOrder($loyaltyPointTransfer->getFkSalesOrder());
+        $loyaltyPointEntity->setFkLoyaltyRule($loyaltyPointTransfer->getFkLoyaltyRule());
+
+        $loyaltyPointEntity->save();
+        $loyaltyPointTransfer->setIdLoyaltyPoint($loyaltyPointEntity->getIdLoyaltyPoint());
+
+        return $loyaltyPointTransfer;
+    }
+
+    public function saveLoyaltyRule(LoyaltyRuleTransfer $loyaltyRuleTransfer): LoyaltyRuleTransfer
+    {
+        $loyaltyRuleEntity = $this->getFactory()
+            ->createLoyaltyRuleQuery()
+            ->filterByIdLoyaltyRule($loyaltyRuleTransfer->getIdLoyaltyRule())
+            ->findOneOrCreate();
+
+        $loyaltyRuleEntity->fromArray($loyaltyRuleTransfer->modifiedToArray(false));
+        $loyaltyRuleEntity->save();
+
+        $loyaltyRuleTransfer->setIdLoyaltyRule($loyaltyRuleEntity->getIdLoyaltyRule());
+
+        return $loyaltyRuleTransfer;
+    }
 }
+

@@ -63,4 +63,6 @@ interface LoyaltyConstants
      * @api
      */
     public const REDEMPTION_VALUE_PER_POINT = 'LOYALTY:REDEMPTION_VALUE_PER_POINT';
+
+
 }

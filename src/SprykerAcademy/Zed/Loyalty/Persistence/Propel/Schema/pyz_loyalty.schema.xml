@@ -1,90 +1,46 @@
 <?xml version="1.0"?>
-<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          name="zed"
-          xsi:noNamespaceSchemaLocation="http://static.spryker.com/schema-01.xsd"
+<database xmlns="spryker:schema-01" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="zed" xsi:schemaLocation="spryker:schema-01 https://static.spryker.com/schema-01.xsd" namespace="Orm\Zed\Loyalty\Persistence" package="src.Orm.Zed.Loyalty.Persistence">
+
+
           namespace="Orm\Zed\Loyalty\Persistence"
           package="src.Orm.Zed.Loyalty.Persistence">
 
-    <table name="pyz_loyalty_point" idMethod="native" phpName="PyzLoyaltyPoint">
-        <column name="id_loyalty_point" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-        <column name="fk_customer" type="INTEGER" required="true" />
-        <column name="points" type="INTEGER" required="true" />
-        <column name="reason" type="VARCHAR" size="255" /> <!-- Added a default size -->
-        <column name="created_at" type="TIMESTAMP" required="true" />
+    <table name="spy_academy_loyalty_rule">
+        <column name="id_loyalty_rule" type="INTEGER" autoIncrement="true" primaryKey="true"/>
+        <column name="name" type="VARCHAR" size="255" required="true"/>
+        <column name="type" type="VARCHAR" size="255" required="true"/>
+        <column name="value" type="DECIMAL" size="8" scale="2" required="true"/>
+        <column name="is_active" type="BOOLEAN" default="false" required="true"/>
 
-        <!-- It's good practice to add an index for foreign keys if you anticipate queries on them -->
-        <index name="pyz_loyalty_point-fk_customer">
-            <index-column name="fk_customer"/>
-        </index>
-        <!--
-        If fk_customer relates to pyz_customer, you would add a foreign key like this:
-       -->
-        <foreign-key name="pyz_loyalty_point-fk_customer" foreignTable="spy_customer">
-            <reference local="fk_customer" foreign="id_customer"/>
-        </foreign-key>
-
-        <id-method-parameter value="pyz_loyalty_point_pk_seq"/>
+        <behavior name="timestampable"/>
+        <id-method-parameter value="spy_academy_loyalty_rule_pk_seq"/>
     </table>
 
-    <table name="pyz_loyalty_tier" idMethod="native" phpName="PyzLoyaltyTier">
-        <column name="id_loyalty_tier" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-        <column name="name" type="VARCHAR" size="255" required="true" /> <!-- Added a default size -->
-        <column name="min_points" type="INTEGER" required="true" />
-        <column name="max_points" type="INTEGER" required="true" />
-
-        <unique name="pyz_loyalty_tier-name">
-            <unique-column name="name"/>
-        </unique>
-
-        <id-method-parameter value="pyz_loyalty_tier_pk_seq"/>
-    </table>
-
-    <table name="pyz_loyalty_customer_tier" idMethod="native" phpName="PyzLoyaltyCustomerTier">
-        <column name="id_loyalty_customer_tier" primaryKey="true" type="INTEGER" autoIncrement="true" required="true"/>
-        <column name="fk_customer" type="INTEGER" required="true" />
-        <column name="fk_loyalty_tier" type="INTEGER" required="true" />
-
-        <foreign-key name="pyz_loyalty_customer_tier-fk_loyalty_tier" foreignTable="pyz_loyalty_tier">
-            <reference local="fk_loyalty_tier" foreign="id_loyalty_tier" />
-        </foreign-key>
-
-        <!-- It's good practice to add an index for foreign keys -->
-        <index name="pyz_loyalty_customer_tier-fk_customer">
-            <index-column name="fk_customer"/>
-        </index>
-        <index name="pyz_loyalty_customer_tier-fk_loyalty_tier">
-            <index-column name="fk_loyalty_tier"/>
-        </index>
-
-        <!--
-        If fk_customer relates to pyz_customer, you would add a foreign key like this:
-       -->
-        <foreign-key name="pyz_loyalty_customer_tier-fk_customer" foreignTable="spy_customer">
-            <reference local="fk_customer" foreign="id_customer"/>
-        </foreign-key>
-
-
-        <!-- Ensure uniqueness for customer and tier combination -->
-        <unique name="pyz_loyalty_customer_tier-fk_customer-fk_loyalty_tier">
-            <unique-column name="fk_customer"/>
-            <unique-column name="fk_loyalty_tier"/>
-        </unique>
-
-        <id-method-parameter value="pyz_loyalty_customer_tier_pk_seq"/>
-    </table>
-    <table name="pyz_loyalty_earning_rule" idMethod="native">
-        <column name="id_loyalty_earning_rule" type="INTEGER" primaryKey="true" autoIncrement="true"/>
-        <column name="earning_rule_name" type="VARCHAR" required="true"/>
-        <column name="earning_condition" type="VARCHAR" required="true"/>
+    <table name="spy_academy_loyalty_point">
+        <column name="id_loyalty_point" type="INTEGER" autoIncrement="true" primaryKey="true"/>
+        <column name="fk_customer" type="INTEGER" required="true"/>
+        <column name="fk_sales_order" type="INTEGER"/>
+        <column name="fk_loyalty_rule" type="INTEGER"/>
         <column name="points" type="INTEGER" required="true"/>
-        <column name="is_active" type="BOOLEAN" defaultValue="true"/>
-    </table>
-    <table name="pyz_loyalty_redeem_rule" idMethod="native">
-        <column name="id_loyalty_redeem_rule" type="INTEGER" primaryKey="true" autoIncrement="true"/>
-        <column name="redeem_rule_name" type="VARCHAR" required="true"/>
-        <column name="description" type="LONGVARCHAR"/>
-        <column name="points_required" type="INTEGER" required="true"/>
-        <column name="is_active" type="BOOLEAN" defaultValue="true"/>
+        <column name="type" type="VARCHAR" size="255" required="true"/>
+        <column name="source" type="VARCHAR" size="255" required="true"/>
+        <column name="description" type="VARCHAR" size="255" required="false"/>
+        <column name="earned_at" type="TIMESTAMP" required="true"/>
+
+        <foreign-key foreignTable="spy_customer" name="spy_academy_loyalty_point-fk_customer" onDelete="CASCADE">
+            <reference local="fk_customer" foreign="id_customer"/>
+        </foreign-key>
+        <foreign-key foreignTable="spy_sales_order" name="spy_academy_loyalty_point-fk_sales_order" onDelete="SETNULL" required="false">
+            <reference local="fk_sales_order" foreign="id_sales_order"/>
+        </foreign-key>
+        <foreign-key foreignTable="spy_academy_loyalty_rule" name="spy_academy_loyalty_point-fk_loyalty_rule" onDelete="SETNULL" required="false">
+            <reference local="fk_loyalty_rule" foreign="id_loyalty_rule"/>
+        </foreign-key>
+
+        <index name="index-spy_academy_loyalty_point-fk_customer">
+            <index-column name="fk_customer"/>
+        </index>
+        <id-method-parameter value="spy_academy_loyalty_point_pk_seq"/>
     </table>
 
 </database>
