@@ -5,7 +5,7 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Pyz\Zed\Sales;
 
@@ -67,9 +67,21 @@ use Spryker\Zed\SalesReturn\Communication\Plugin\Sales\RemunerationTotalOrderExp
 use Spryker\Zed\SalesReturn\Communication\Plugin\Sales\UpdateOrderItemIsReturnableByGlobalReturnableNumberOfDaysPlugin;
 use Spryker\Zed\SalesReturn\Communication\Plugin\Sales\UpdateOrderItemIsReturnableByItemStatePlugin;
 use Spryker\Zed\Shipment\Communication\Plugin\ShipmentOrderHydratePlugin;
+use SprykerAcademy\Zed\Loyalty\Communication\Plugin\Sales\OrderPostSaveLoyaltyAwardPlugin;
 
 class SalesDependencyProvider extends SprykerSalesDependencyProvider
 {
+    /**
+     * @return array<\Spryker\Zed\SalesExtension\Dependency\Plugin\ItemTransformerStrategyPluginInterface>
+     */
+    public function getItemTransformerStrategyPlugins(): array
+    {
+        return [
+            new PackagingUnitSplittableItemTransformerStrategyPlugin(), #ProductPackagingUnit
+            new NonSplittableItemTransformerStrategyPlugin(),
+        ];
+    }
+
     /**
      * @return array<\Spryker\Zed\Sales\Dependency\Plugin\OrderExpanderPreSavePluginInterface>
      */
@@ -117,17 +129,6 @@ class SalesDependencyProvider extends SprykerSalesDependencyProvider
     }
 
     /**
-     * @return array<\Spryker\Zed\SalesExtension\Dependency\Plugin\ItemTransformerStrategyPluginInterface>
-     */
-    public function getItemTransformerStrategyPlugins(): array
-    {
-        return [
-            new PackagingUnitSplittableItemTransformerStrategyPlugin(), #ProductPackagingUnit
-            new NonSplittableItemTransformerStrategyPlugin(),
-        ];
-    }
-
-    /**
      * @return array<\Spryker\Zed\SalesExtension\Dependency\Plugin\SalesTablePluginInterface>
      */
     protected function getSalesTablePlugins(): array
@@ -147,6 +148,7 @@ class SalesDependencyProvider extends SprykerSalesDependencyProvider
             new OrderCustomReferenceOrderPostSavePlugin(),
             new SaveCompanyBusinessUnitUuidOrderPostSavePlugin(),
             new SaveCompanyUuidOrderPostSavePlugin(),
+            new OrderPostSaveLoyaltyAwardPlugin(),
         ];
     }
 
