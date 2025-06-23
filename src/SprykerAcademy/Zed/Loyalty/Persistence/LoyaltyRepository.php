@@ -5,6 +5,7 @@ namespace SprykerAcademy\Zed\Loyalty\Persistence;
 use Generated\Shared\Transfer\CustomerLoyaltyTransfer;
 use Generated\Shared\Transfer\LoyaltyPointTransfer;
 use Generated\Shared\Transfer\LoyaltyRuleTransfer;
+use Orm\Zed\Customer\Persistence\Map\SpyCustomerTableMap;
 use Orm\Zed\Loyalty\Persistence\Map\SpyAcademyLoyaltyPointTableMap;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
 
@@ -26,14 +27,14 @@ class LoyaltyRepository extends AbstractRepository implements LoyaltyRepositoryI
 
         $customerData = $this->getFactory()
             ->createLoyaltyPointQuery()
-            ->joinWithCustomer()
-            ->where(SpyAcademyLoyaltyPointTableMap::COL_FK_CUSTOMER . ' = ?', $idCustomer)
-            ->select(['spy_customer.customer_reference'])
+            ->joinWithSpyCustomer()
+            ->filterByFkCustomer($idCustomer)
+            ->select([SpyCustomerTableMap::COL_CUSTOMER_REFERENCE])
             ->findOne();
 
         $customerLoyaltyTransfer = (new CustomerLoyaltyTransfer())
             ->setFkCustomer($idCustomer)
-            ->setCustomerReference($customerData['spy_customer.customer_reference']);
+            ->setCustomerReference($customerData);
 
         $currentBalance = 0;
         foreach ($loyaltyPointEntities as $loyaltyPointEntity) {

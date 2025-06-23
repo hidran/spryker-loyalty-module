@@ -158,14 +158,14 @@ $config[KernelConstants::RESOLVED_INSTANCE_CACHE_ENABLED] = true;
 
 $config[KernelConstants::PROJECT_NAMESPACE] = 'Pyz';
 $config[KernelConstants::PROJECT_NAMESPACES] = [
-    'Pyz',
+    'Pyz','SprykerAcademy'
 ];
 $config[KernelConstants::CORE_NAMESPACES] = [
     'SprykerShop',
     'SprykerEco',
     'Spryker',
     'SprykerSdk',
-    'SprykerAcademy',
+    //'SprykerAcademy',
 ];
 
 // >>> ROUTER
