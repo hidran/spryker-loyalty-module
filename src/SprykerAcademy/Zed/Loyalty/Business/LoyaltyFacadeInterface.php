@@ -12,10 +12,12 @@ namespace SprykerAcademy\Zed\Loyalty\Business;
 use Generated\Shared\Transfer\CustomerLoyaltyTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\QuoteTransfer;
+use Generated\Shared\Transfer\SaveOrderTransfer;
 
 interface LoyaltyFacadeInterface
 {
-    public function awardPointsForOrder(OrderTransfer $orderTransfer): void;
+    public function awardPointsForOrder(SaveOrderTransfer $orderTransfer, QuoteTransfer $quoteTransfer): void;
 
     public function getCustomerLoyalty(CustomerTransfer $customerTransfer): CustomerLoyaltyTransfer;
 }

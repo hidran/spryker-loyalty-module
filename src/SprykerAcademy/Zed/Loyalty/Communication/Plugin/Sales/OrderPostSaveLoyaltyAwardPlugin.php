@@ -18,16 +18,15 @@ class OrderPostSaveLoyaltyAwardPlugin extends AbstractPlugin implements OrderPos
 
     public function execute(SaveOrderTransfer $saveOrderTransfer, QuoteTransfer $quoteTransfer): SaveOrderTransfer
     {
-        $orderTransfer = $saveOrderTransfer->getOrderTransfer();
-
+        $orderTransfer = $saveOrderTransfer->getOrder();
+        $customerTransfer = $quoteTransfer->getCustomer();
         // Guard clause to ensure we only process orders for registered customers with a valid OrderTransfer.
-        if ($orderTransfer === null || $orderTransfer->getCustomer() === null || $orderTransfer->getCustomer(
-            )->getIdCustomer() === null) {
+        if ($orderTransfer === null || $customerTransfer === null || $customerTransfer->getIdCustomer() === null) {
             return $saveOrderTransfer;
         }
 
         try {
-            $this->getFacade()->awardPointsForOrder($orderTransfer);
+            $this->getFacade()->awardPointsForOrder($saveOrderTransfer, $quoteTransfer);
         } catch (\Exception $exception) {
             // Enterprise Best Practice: A failure in a non-critical, post-save hook
             // must be logged thoroughly but MUST NOT throw an exception that could

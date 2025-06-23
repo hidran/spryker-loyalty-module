@@ -8,6 +8,7 @@
         <property name="idLoyaltyPoint" type="int"/>
         <property name="fkCustomer" type="int"/>
         <property name="fkSalesOrder" type="int"/>
+        <property name="fkLoyaltyRule" type="int"/>
         <!-- Positive for earning, negative for redemption. -->
         <property name="points" type="int"/>
         <!-- e.g., 'EARNED', 'REDEEMED', 'EXPIRED', 'ADJUSTMENT' -->

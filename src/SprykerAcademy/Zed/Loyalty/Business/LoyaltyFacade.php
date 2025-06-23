@@ -5,6 +5,8 @@ namespace SprykerAcademy\Zed\Loyalty\Business;
 use Generated\Shared\Transfer\CustomerLoyaltyTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\QuoteTransfer;
+use Generated\Shared\Transfer\SaveOrderTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
 /**
@@ -12,9 +14,9 @@ use Spryker\Zed\Kernel\Business\AbstractFacade;
  */
 class LoyaltyFacade extends AbstractFacade implements LoyaltyFacadeInterface
 {
-    public function awardPointsForOrder(OrderTransfer $orderTransfer): void
+    public function awardPointsForOrder(SaveOrderTransfer $orderTransfer, QuoteTransfer $quoteTransfer): void
     {
-        $this->getFactory()->createLoyaltyWriter()->awardPointsForOrder($orderTransfer);
+        $this->getFactory()->createLoyaltyWriter()->awardPointsForOrder($orderTransfer,$quoteTransfer);
     }
 
     public function getCustomerLoyalty(CustomerTransfer $customerTransfer): CustomerLoyaltyTransfer

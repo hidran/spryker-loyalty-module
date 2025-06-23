@@ -11,6 +11,8 @@ namespace SprykerAcademy\Zed\Loyalty\Business\Writer;
 
 use Generated\Shared\Transfer\LoyaltyPointTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\QuoteTransfer;
+use Generated\Shared\Transfer\SaveOrderTransfer;
 use SprykerAcademy\Zed\Loyalty\LoyaltyConfig;
 use SprykerAcademy\Zed\Loyalty\Persistence\LoyaltyEntityManagerInterface;
 use SprykerAcademy\Zed\Loyalty\Persistence\LoyaltyRepositoryInterface;
@@ -27,7 +29,7 @@ class LoyaltyWriter implements LoyaltyWriterInterface
     ) {
     }
 
-    public function awardPointsForOrder(OrderTransfer $orderTransfer): void
+    public function awardPointsForOrder(SaveOrderTransfer $orderTransfer, QuoteTransfer $quoteTransfer): void
     {
         $earningRule = $this->loyaltyRepository->findActiveLoyaltyRuleByType(static::EARN_RULE_TYPE_ORDER);
 
@@ -36,12 +38,12 @@ class LoyaltyWriter implements LoyaltyWriterInterface
             return;
         }
 
-        $orderTransfer->requireTotals()->requireCustomer();
-        $customer = $orderTransfer->getCustomer();
+       // $orderTransfer->getOrderExpenses()->
+        $customer = $quoteTransfer->getCustomer();
         $customer->requireIdCustomer();
 
         // Calculate points based on the rule's value (e.g., 1 point per 100 cents)
-        $pointsToAward = (int)floor($orderTransfer->getTotals()->getGrandTotal() * $earningRule->getValue());
+        $pointsToAward = (int)floor($quoteTransfer->getTotals()->getGrandTotal() * $earningRule->getValue());
 
         if ($pointsToAward <= 0) {
             return;
