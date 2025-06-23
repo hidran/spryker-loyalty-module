@@ -6,9 +6,10 @@
  */
 
 declare(strict_types = 1);
-
 namespace SprykerAcademy\Client\Loyalty;
 
+use Generated\Shared\Transfer\CustomerTransfer;
+use Generated\Shared\Transfer\CustomerLoyaltyTransfer;
 use Spryker\Client\Kernel\AbstractClient;
 
 /**
@@ -16,4 +17,10 @@ use Spryker\Client\Kernel\AbstractClient;
  */
 class LoyaltyClient extends AbstractClient implements LoyaltyClientInterface
 {
+    public function getCustomerLoyalty(CustomerTransfer $customerTransfer): CustomerLoyaltyTransfer
+    {
+        return $this->getFactory()
+            ->createLoyaltyStub()
+            ->getCustomerLoyalty($customerTransfer);
+    }
 }
